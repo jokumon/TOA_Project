@@ -1,4 +1,4 @@
-# CFG & PDA Visualizer — Module Reference
+# CFG & PDA Visualizer
 
 ## Overview
 Three cooperating modules:
@@ -6,8 +6,8 @@ Three cooperating modules:
 | File | Role |
 |------|------|
 | `cfg_parser.py` | Parses CFG rules, derives strings, returns steps |
-| `visualizer.py` | Renders derivation trees and PDA diagrams via Graphviz |
-| `main.py` | Tkinter GUI — ties everything together |
+| `visualizer.py` | Draws derivation trees and PDA diagrams via Graphviz |
+| `main.py` | Tkinter GUI, runs the project (ofc) |
 
 ---
 
