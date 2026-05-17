@@ -108,7 +108,11 @@ class VisualizerApp:
             if dest:
                 import shutil
                 shutil.copy2(src_path, dest)
+                if os.path.exists(src_path):
+                    os.remove(src_path)
                 return dest
+        if os.path.exists(src_path):
+            os.remove(src_path) 
         return None
 
     def load_cfg(self):
@@ -195,7 +199,7 @@ class VisualizerApp:
 
             if accepted:
                 messagebox.showinfo("PDA Result", "String accepted by PDA!")
-                tmp_path = "pda_diagram.png"
+                tmp_path = "saved_results/pda_diagram.png"
                 draw_pda_states(pda, 'pda_diagram')
                 self._show_image_on_canvas(self.pda_canvas, tmp_path)
                 self._ask_save(tmp_path, "pda_diagram.png")
