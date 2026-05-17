@@ -1,6 +1,89 @@
 # CFG & PDA Visualizer
 
-## Overview
+## Working:
+
+Run: `python3 main.py`
+
+### Tabs
+| Tab | Function |
+|-----|----------|
+| CFG Mode | Enter/load CFG rules, run or step derivation |
+| PDA Mode | Enter/load PDA JSON, run or step simulation |
+
+### Buttons
+| Button | Action |
+|--------|--------|
+| Load | Opens file dialog, pastes into text box |
+| Run | Full simulation → shows diagram on canvas |
+| Step | Shows derivation steps / trace as text on canvas |
+| Reset | Clears inputs and canvas |
+
+### Visualization Panel
+- Scrollable (horizontal + vertical scrollbars)
+- Draggable — click and drag to pan
+- Full image resolution preserved (no thumbnail downscale)
+
+### Save Function
+After a successful Run:
+1. Diagram is always rendered to a temp path first
+2. Popup asks **"Do you want to save this image?"**
+3. If yes → file dialog to pick save location
+4. If no → image still displays in canvas, temp file deleted
+5. Preserves metadata
+
+CFG temp path: `saved_results/cfg_tree_tmp.png`  
+PDA temp path: `saved_results/pda_diagram.png`
+
+**CFG Input format:**
+S -> a S b | ε
+S -> a b
+- One rule per line
+- `->` separates LHS from RHS
+- `|` separates alternatives
+- Use `ε` for empty production
+- Symbols separated by spaces are treated as separate tokens; unseparated chars are split individually (e.g. `ab` → `['a','b']`)
+
+## PDA Input Format (JSON)
+```json
+{
+  "states": ["q0", "q1", "q2"],
+  "input_symbols": ["a", "b"],
+  "stack_symbols": ["A", "Z"],
+  "start_state": "q0",
+  "accept_states": ["q2"],
+  "start_stack": "Z",
+  "transitions": {
+    "q0": {
+      "a": {
+        "Z": ["q1", "AZ"]
+      },
+      "ε": {
+        "Z": ["q2", "Z"]
+      }
+    }
+  }
+}
+```
+**Transition value formats:**
+- Single: `["next_state", "push_string"]`
+- Multiple: `[["q1", "AZ"], ["q2", "Z"]]`
+- Empty push (pop only): `["q1", "ε"]`
+- Epsilon input: key `"ε"`, `"epsilon"`, `"eps"`, or `""`
+
+## PDA Input Format (plaintext)
+states: q0, q1, q2
+input_symbols: a, b
+stack_symbols: A, Z
+start_state: q0
+accept_states: q2
+start_stack: Z
+q0, a, Z -> q0, AZ
+q0, b, A -> q1, ε
+q1, ε, Z -> q2, Z
+
+---
+
+## Working:
 Three cooperating modules:
 
 | File | Role |
@@ -15,16 +98,6 @@ Three cooperating modules:
 
 ### `parse_cfg(cfg_text: str) -> dict`
 Parses plaintext CFG rules into a dictionary.
-
-**Input format:**
-S -> a S b | ε
-S -> a b
-- One rule per line
-- `->` separates LHS from RHS
-- `|` separates alternatives
-- Use `ε` for empty production
-- Symbols separated by spaces are treated as separate tokens; unseparated chars are split individually (e.g. `ab` → `['a','b']`)
-
 **Returns:** `{ 'S': [['a','S','b'], []], ... }`
 
 ---
@@ -88,83 +161,13 @@ Renders PDA state diagram.
 ---
 
 ## main.py (GUI)
-
-### Tabs
-| Tab | Function |
-|-----|----------|
-| CFG Mode | Enter/load CFG rules, run or step derivation |
-| PDA Mode | Enter/load PDA JSON, run or step simulation |
-
-### Buttons
-| Button | Action |
-|--------|--------|
-| Load | Opens file dialog, pastes into text box |
-| Run | Full simulation → shows diagram on canvas |
-| Step | Shows derivation steps / trace as text on canvas |
-| Reset | Clears inputs and canvas |
-
-### Canvas Panel
-- Scrollable (horizontal + vertical scrollbars)
-- **Draggable** — click and drag to pan
-- Full image resolution preserved (no thumbnail downscale)
-
-### Save Function (`_ask_save`)
-After a successful Run:
-1. Diagram is always rendered to a temp path first
-2. Popup asks **"Do you want to save this image?"**
-3. If yes → file dialog to pick save location
-4. If no → image still displays in canvas, temp file left in place
-5. Uses `shutil.copy2` — preserves metadata
-
-CFG temp path: `saved_results/cfg_tree_tmp.png`  
-PDA temp path: `pda_diagram.png`
-
----
-
-## PDA Input Format (JSON)
-
-```json
-{
-  "states": ["q0", "q1", "q2"],
-  "input_symbols": ["a", "b"],
-  "stack_symbols": ["A", "Z"],
-  "start_state": "q0",
-  "accept_states": ["q2"],
-  "start_stack": "Z",
-  "transitions": {
-    "q0": {
-      "a": {
-        "Z": ["q1", "AZ"]
-      },
-      "ε": {
-        "Z": ["q2", "Z"]
-      }
-    }
-  }
-}
-```
-
-**Transition value formats:**
-- Single: `["next_state", "push_string"]`
-- Multiple: `[["q1", "AZ"], ["q2", "Z"]]`
-- Empty push (pop only): `["q1", "ε"]`
-- Epsilon input: key `"ε"`, `"epsilon"`, `"eps"`, or `""`
-
-## PDA Input Format (plaintext)
-states: q0, q1, q2
-input_symbols: a, b
-stack_symbols: A, Z
-start_state: q0
-accept_states: q2
-start_stack: Z
-q0, a, Z -> q0, AZ
-q0, b, A -> q1, ε
-q1, ε, Z -> q2, Z
-
+- Uses tkinter and canvases
+- runs the entire program
 ---
 
 ## Dependencies
 
-pillow
-graphviz
-Graphviz binary must also be installed on the system and available in PATH.
+- pillow
+- Graphviz
+
+binaries must also be installed on the system and available in PATH.
