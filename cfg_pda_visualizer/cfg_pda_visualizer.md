@@ -34,7 +34,7 @@ After a successful Run:
 CFG temp path: `saved_results/cfg_tree_tmp.png`  
 PDA temp path: `saved_results/pda_diagram.png`
 
-**CFG Input format:**
+## CFG Input format:
 #### General Format:  
 NON_TERMINAL -> production1 | production2 | production3  
 
