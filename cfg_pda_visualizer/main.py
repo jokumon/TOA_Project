@@ -25,7 +25,6 @@ class VisualizerApp:
         self.create_pda_ui()
 
     def _make_canvas(self, parent):
-        """Creates a scrollable, draggable canvas panel."""
         frame = ttk.Frame(parent, relief='sunken', borderwidth=1)
         frame.pack(fill='both', expand=True, padx=10, pady=10)
 
@@ -41,7 +40,6 @@ class VisualizerApp:
         vbar.pack(side='right', fill='y')
         canvas.pack(side='left', fill='both', expand=True)
 
-        # Drag to pan
         canvas.bind('<ButtonPress-1>', lambda e: canvas.scan_mark(e.x, e.y))
         canvas.bind('<B1-Motion>', lambda e: canvas.scan_dragto(e.x, e.y, gain=1))
 
@@ -97,7 +95,6 @@ class VisualizerApp:
         canvas.config(scrollregion=canvas.bbox('all'))
 
     def _ask_save(self, src_path, default_name):
-        """Popup: ask user if they want to save. Returns chosen path or None."""
         answer = messagebox.askyesno("Save Image", "Do you want to save this image?")
         if answer:
             dest = filedialog.asksaveasfilename(

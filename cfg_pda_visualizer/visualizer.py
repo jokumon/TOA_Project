@@ -3,14 +3,9 @@ import uuid
 
 
 def draw_cfg_tree(steps, output_file='cfg_tree'):
-    """
-    Draws a derivation tree from leftmost derivation steps.
-    Each step is a full sentential form (like ["S", "A B", "a B", "a b"])
-    """
     dot = Digraph(format='png')
     dot.attr('node', shape='circle')
 
-    # Recursive function to build tree
     def build_tree(parent_id, sentential_form, depth):
         if depth >= len(steps):
             return
@@ -25,7 +20,6 @@ def draw_cfg_tree(steps, output_file='cfg_tree'):
             if depth + 1 < len(steps):
                 next_symbols = steps[depth + 1].split()
 
-                # Check if expansion occurred here
                 if len(next_symbols) > len(current_symbols):
                     # We assume only the first non-terminal expands (leftmost derivation)
                     if symbol != next_symbols[i]:  # crude but works
@@ -33,7 +27,7 @@ def draw_cfg_tree(steps, output_file='cfg_tree'):
                         break  # only one expansion per step
 
     # Begin tree
-    root_symbol = steps[0].split()[0]  # start symbol
+    root_symbol = steps[0].split()[0]  
     root_id = str(uuid.uuid4())
     dot.node(root_id, root_symbol)
     build_tree(root_id, steps[0], 0)
@@ -46,17 +40,14 @@ def draw_cfg_tree(steps, output_file='cfg_tree'):
 
 
 def draw_pda_states(pda, output_file='pda_diagram'):
-    """
-    Draws PDA state transitions from the parsed PDA.
-    """
     dot = Digraph(format='png')
-    dot.attr(rankdir='LR')  # Left to right
+    dot.attr(rankdir='LR')  
 
     for state in pda['states']:
         shape = 'doublecircle' if state in pda['accept_states'] else 'circle'
         dot.node(state, shape=shape)
 
-    dot.node('', shape='none')  # Invisible start arrow
+    dot.node('', shape='none') 
     dot.edge('', pda['start_state'])
 
     for (cur_state, inp, stack_top), transitions in pda['transitions'].items():

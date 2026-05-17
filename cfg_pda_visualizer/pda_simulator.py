@@ -23,7 +23,6 @@ def parse_pda(raw):
                 st = stack_top.strip()
                 key = (state, inp, st)
                 flat.setdefault(key, [])
-                # actions may be a list‐of‐lists or a single pair
                 if isinstance(actions, list) and actions and isinstance(actions[0], list):
                     for nxt, push in actions:
                         flat[key].append((nxt, push))
@@ -32,7 +31,6 @@ def parse_pda(raw):
                     nxt, push = actions
                     flat[key].append((nxt, push))
 
-    # Debug: dump the transition table
     print("\n[PDA PARSER] Flattened transitions:")
     for k, v in flat.items():
         print(f"    {k} → {v}")
@@ -84,13 +82,7 @@ def _parse_pda_text(txt):
     return pda
 
 def simulate_pda(pda, input_str):
-    """
-    Simulate PDA with BFS, but only allow ε-moves when no real move exists.
-    Accept by final state once input is consumed.
-    """
     from collections import deque
-
-    # Each config is (state, remaining_input, stack, trace)
     queue = deque([ (pda['start_state'], input_str, [pda['start_stack']], []) ])
 
     while queue:
@@ -109,7 +101,6 @@ def simulate_pda(pda, input_str):
         top = stack[-1]
         real_sym = rem[0] if rem else ''
 
-        # Decide possible moves: real_sym only if it exists, else both
         if (state, real_sym, top) in pda['transitions']:
             symbols = [real_sym]
         else:
@@ -126,7 +117,6 @@ def simulate_pda(pda, input_str):
                 new_stack = stack[:-1]  # pop
 
                 if push_str != 'ε':
-                    # push characters in reverse order
                     new_stack += list(push_str[::-1])
 
                 queue.append((next_state, new_rem, new_stack, trace + [step]))
