@@ -2,7 +2,10 @@
 
 ## Working:
 
-Run: `python3 main.py`
+```bash
+pip install -r requirements.txt
+python main.py
+```
 
 ### Tabs
 | Tab | Function |
