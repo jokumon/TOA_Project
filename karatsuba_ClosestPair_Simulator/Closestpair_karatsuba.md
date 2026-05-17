@@ -1,4 +1,4 @@
-# DAA Visualizer — Closest Pair & Karatsuba Multiplication
+# Closest Pair & Karatsuba Multiplication visualizer
 
 A step-by-step animated visualizer for two classic divide-and-conquer algorithms
 
@@ -11,7 +11,7 @@ pip install -r requirements.txt
 python main.py
 ```
 
-Make sure `test_cases/` and `karatsuba_answers/` folders exist, or just hit **Generate input files** in the app — it creates them automatically.
+Make sure `test_cases/` and `karatsuba_answers/` folders exist, or just hit **Generate input files** in the app, it creates them automatically.
 
 ---
 
@@ -29,7 +29,7 @@ Make sure `test_cases/` and `karatsuba_answers/` folders exist, or just hit **Ge
 
 ## Input File Formats
 
-### Closest Pair — `closest_input_N.txt`
+### Closest Pair: `closest_input_N.txt`
 
 - Line 1: integer N (number of points)
 - Lines 2 to N+1: `x y` coordinates (integers or floats, space-separated)
@@ -43,7 +43,7 @@ Make sure `test_cases/` and `karatsuba_answers/` folders exist, or just hit **Ge
 80 60
 ```
 
-### Karatsuba — `karatsuba_input_N.txt`
+### Karatsuba: `karatsuba_input_N.txt`
 
 - Line 1: big integer A
 - Line 2: big integer B
@@ -103,7 +103,7 @@ where z0=xl·yl, z2=xh·yh, z1=(xl+xh)·(yl+yh)
 ```
 Base case: either number < 10.
 
-Visualizes the **recursion tree** — each node shows the two numbers being multiplied and depth. The current active node is highlighted larger.
+Visualizes the **recursion tree**, each node shows the two numbers being multiplied and depth. The current active node is highlighted larger.
 
 ---
 
