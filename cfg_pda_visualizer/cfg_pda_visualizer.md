@@ -35,15 +35,85 @@ CFG temp path: `saved_results/cfg_tree_tmp.png`
 PDA temp path: `saved_results/pda_diagram.png`
 
 **CFG Input format:**
-S -> a S b | ε
-S -> a b
+#### General Format:  
+NON_TERMINAL -> production1 | production2 | production3  
+
+**Example:**  
+S -> a S b | ε  
+can be without spaces:  
+S -> ab  
+#### Rules
 - One rule per line
 - `->` separates LHS from RHS
 - `|` separates alternatives
 - Use `ε` for empty production
 - Symbols separated by spaces are treated as separate tokens; unseparated chars are split individually (e.g. `ab` → `['a','b']`)
+- Genrally:
+  - Uppercase symbols are usually treated as non-terminals.
+  - Lowercase symbols are usually terminals.
+- Recursive grammars may become computationally expensive.
+
+## PDA Input Format (Plaintext)
+#### Required Sections:
+- states:
+- input_symbols:
+- stack_symbols:
+- start_state:
+- accept_states:
+- start_stack:
+- Transition Format: current_state, input_symbol, stack_top -> next_state, push_string  
+#### Rules
+- Separate values using commas.
+- Use ε for epsilon transitions.
+- Push strings are pushed character-by-character.
+- Avoid adding extra commas in transitions.
+- Every transition right-hand side must contain exactly:
+  - next state
+  - push string
+- Push strings are reversed internally before pushing onto the stack.
+- Acceptance occurs when:
+  - input is consumed
+  - PDA reaches an accept state
+    
+**Example:**  
+  
+states: q0, q1, q2  
+input_symbols: a, b  
+stack_symbols: A, Z  
+start_state: q0  
+accept_states: q2  
+start_stack: Z  
+q0, a, Z -> q0, AZ  
+q0, b, A -> q1, ε  
+q1, ε, Z -> q2, Z  
 
 ## PDA Input Format (JSON)
+The simulator also supports PDA definitions in JSON.  
+  
+#### General Structure:  
+
+```json
+{
+  "states": [],
+  "input_symbols": [],
+  "stack_symbols": [],
+  "start_state": "",
+  "accept_states": [],
+  "start_stack": "",
+  "transitions": {}
+}
+```
+#### Transition Structure:
+Transitions follow this structure:  
+
+```json
+"current_state": {
+  "input_symbol": {
+    "stack_top": [["next_state", "push_string"]]
+  }
+}
+```
+**Example:**
 ```json
 {
   "states": ["q0", "q1", "q2"],
@@ -69,17 +139,6 @@ S -> a b
 - Multiple: `[["q1", "AZ"], ["q2", "Z"]]`
 - Empty push (pop only): `["q1", "ε"]`
 - Epsilon input: key `"ε"`, `"epsilon"`, `"eps"`, or `""`
-
-## PDA Input Format (plaintext)
-states: q0, q1, q2
-input_symbols: a, b
-stack_symbols: A, Z
-start_state: q0
-accept_states: q2
-start_stack: Z
-q0, a, Z -> q0, AZ
-q0, b, A -> q1, ε
-q1, ε, Z -> q2, Z
 
 ---
 
