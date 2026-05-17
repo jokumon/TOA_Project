@@ -1,0 +1,2 @@
+graphviz==0.20.2
+pillow==10.2.0
